@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buscador de Accesos Netflix</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #141414;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      margin: 0;
+    }
+    .wrapper {
+      max-width: 500px;
+      margin: 40px auto;
+      background: #1f1f1f;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    h1 { color: #E50914; font-size: 1.8rem; margin-bottom: 20px; }
+    .btn-buscar {
+      background-color: #E50914;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+    }
+    .btn-buscar:hover { background-color: #b80710; }
+    .btn-buscar:disabled { background-color: #555; cursor: not-allowed; }
+    .resultado-txt {
+      width: 100%;
+      height: 180px;
+      margin-top: 25px;
+      background-color: #111;
+      color: #00ff00;
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 12px;
+      box-sizing: border-box;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.9rem;
+      resize: none;
+    }
+    label { display: block; text-align: left; margin-top: 20px; color: #aaa; font-size: 0.9rem; }
+    .btn-abrir {
+      display: none;
+      background-color: #22c55e;
+      color: white;
+      text-decoration: none;
+      padding: 12px;
+      font-weight: bold;
+      border-radius: 4px;
+      margin-top: 15px;
+      transition: background 0.2s;
+    }
+    .btn-abrir:hover { background-color: #16a34a; }
+  </style>
+</head>
+<body>
+
+  <div class="wrapper">
+    <h1>Buscador de Enlaces Netflix</h1>
+    <p>Haz clic en el botón de abajo para consultar el contenido del correo más reciente recibido en tu alias.</p>
+    
+    <button id="btn" class="btn-buscar" onclick="buscarUltimoCorreo()">🔍 BUSCAR ÚLTIMO CORREO</button>
+    
+    <label for="box">Contenido del correo extraído:</label>
+    <textarea id="box" class="resultado-txt" readonly>Presiona "BUSCAR" para iniciar la consulta...</textarea>
+    
+    <!-- Botón directo interactivo adicional para comodidad de tus amigos -->
+    <a id="btn-netflix" class="btn-abrir" href="#" target="_blank">🔓 IR DIRECTO A NETFLIX</a>
+  </div>
+
+  <script>
+    // URL real provista por tu implementación en Google Apps Script
+    const API_URL = "https://script.google.com/macros/s/AKfycbz29nygI8cziscwvb_q0S0a_A9QFMIlmfRa07CFzvfDGXX-OKf_FvOhtoqfPpgqXRwuBg/exec";
+
+    async function buscarUltimoCorreo() {
+      const boton = document.getElementById("btn");
+      const cuadroTexto = document.getElementById("box");
+      const botonNetflix = document.getElementById("btn-netflix");
+
+      // Cambiar estado visual mientras busca
+      boton.disabled = true;
+      boton.innerText = "🔄 CONSULTANDO A GMAIL...";
+      cuadroTexto.value = "Conectando con la bandeja de entrada de teamflix2026+2@gmail.com...";
+      botonNetflix.style.display = "none";
+
+      try {
+        const respuesta = await fetch(API_URL);
+        const data = await respuesta.json();
+
+        if (data.error) {
+          cuadroTexto.value = `AVISO DEL SERVIDOR:\n${data.error}`;
+        } else {
+          // Limpieza técnica: Netflix codifica los enlaces HTML usando "&amp;" 
+          // Reemplazamos por "&" para que el navegador de tus amigos lo lea sin corromperse
+          let enlaceLimpio = data.enlace.replace(/&amp;/g, '&');
+
+          // Estructurar el texto dentro del cuadro como querías
+          cuadroTexto.value = `[CORREO DETECTADO]\n` +
+                              `Fecha: ${data.fecha}\n` +
+                              `Asunto: ${data.asunto}\n` +
+                              `----------------------------------------\n` +
+                              `ENLACE DIRECTO DE ACCESO:\n${enlaceLimpio}`;
+          
+          // Habilitar el botón verde interactivo abajo para que no tengan que copiar y pegar
+          botonNetflix.href = enlaceLimpio;
+          botonNetflix.style.display = "block";
+        }
+      } catch (error) {
+        cuadroTexto.value = "ERROR DE CONEXIÓN:\nNo se pudo consultar el servidor de Google. Asegúrate de que el despliegue de tu Web App mantenga el acceso configurado en 'Cualquiera'.";
+        console.error(error);
+      } finally {
+        // Restaurar el botón de búsqueda
+        boton.disabled = false;
+        boton.innerText = "🔍 BUSCAR ÚLTIMO CORREO";
+      }
+    }
+  </script>
+
+</body>
+</html>
