@@ -3,128 +3,216 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buscador de Accesos Netflix</title>
+  <title>Acceso Compartido — Netflix</title>
+  <!-- Importamos una tipografía moderna y limpia desde Google Fonts -->
+  <link rel="preconnect" href="https://googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link href="https://googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  
   <style>
+    :root {
+      --netflix-red: #E50914;
+      --netflix-dark-red: #b80710;
+      --bg-gradient: radial-gradient(circle at top, #2b0305 0%, #0c0c0c 60%);
+      --card-bg: rgba(26, 26, 26, 0.85);
+      --input-bg: rgba(10, 10, 10, 0.6);
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #141414;
-      color: white;
-      text-align: center;
-      padding: 20px;
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-gradient);
+      background-color: #0c0c0c;
+      color: #ffffff;
+      min-height: 100vh;
       margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      box-sizing: border-box;
+      -webkit-font-smoothing: antialiased;
     }
+
     .wrapper {
-      max-width: 500px;
-      margin: 40px auto;
-      background: #1f1f1f;
-      padding: 30px;
-      border-radius: 8px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-    }
-    h1 { color: #E50914; font-size: 1.8rem; margin-bottom: 20px; }
-    .btn-buscar {
-      background-color: #E50914;
-      color: white;
-      border: none;
-      padding: 12px 30px;
-      font-size: 1.1rem;
-      font-weight: bold;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
+      max-width: 480px;
       width: 100%;
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 40px 30px;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+      text-align: center;
     }
-    .btn-buscar:hover { background-color: #b80710; }
-    .btn-buscar:disabled { background-color: #555; cursor: not-allowed; }
+
+    h1 {
+      color: var(--netflix-red);
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    p {
+      color: #b3b3b3;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 30px;
+    }
+
+    .btn-buscar {
+      background-color: var(--netflix-red);
+      color: #ffffff;
+      border: none;
+      padding: 16px 24px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+    }
+
+    .btn-buscar:hover {
+      background-color: var(--netflix-dark-red);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(229, 9, 20, 0.4);
+    }
+
+    .btn-buscar:disabled {
+      background-color: #333333;
+      color: #777777;
+      cursor: not-allowed;
+      box-shadow: none;
+      transform: none;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-top: 28px;
+      margin-bottom: 8px;
+      color: #e5e5e5;
+      font-size: 0.85rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
     .resultado-txt {
       width: 100%;
-      height: 180px;
-      margin-top: 25px;
-      background-color: #111;
-      color: #00ff00;
-      border: 1px solid #333;
-      border-radius: 4px;
-      padding: 12px;
+      height: 170px;
+      background-color: var(--input-bg);
+      color: #f5f5f7;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      padding: 16px;
       box-sizing: border-box;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.5;
       resize: none;
+      outline: none;
     }
-    label { display: block; text-align: left; margin-top: 20px; color: #aaa; font-size: 0.9rem; }
+
     .btn-abrir {
       display: none;
-      background-color: #22c55e;
-      color: white;
+      background-color: #ffffff;
+      color: #0c0c0c;
       text-decoration: none;
-      padding: 12px;
-      font-weight: bold;
-      border-radius: 4px;
-      margin-top: 15px;
-      transition: background 0.2s;
+      padding: 15px;
+      font-weight: 600;
+      font-size: 1rem;
+      border-radius: 8px;
+      margin-top: 16px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
     }
-    .btn-abrir:hover { background-color: #16a34a; }
+
+    .btn-abrir:hover {
+      background-color: #e6e6e6;
+    }
   </style>
 </head>
 <body>
 
   <div class="wrapper">
-    <h1>Buscador de Enlaces Netflix</h1>
-    <p>Haz clic en el botón de abajo para consultar el contenido del correo más reciente recibido en tu alias.</p>
+    <h1>Enlaces Netflix</h1>
+    <p>Consulta en tiempo real las credenciales y accesos del último correo recibido en el alias de administración.</p>
     
-    <button id="btn" class="btn-buscar" onclick="buscarUltimoCorreo()">🔍 BUSCAR ÚLTIMO CORREO</button>
+    <button id="btn" class="btn-buscar" onclick="buscarUltimoCorreo()">🔍 Buscar último acceso</button>
     
-    <label for="box">Contenido del correo extraído:</label>
-    <textarea id="box" class="resultado-txt" readonly>Presiona "BUSCAR" para iniciar la consulta...</textarea>
+    <label for="box">Información extraída</label>
+    <textarea id="box" class="resultado-txt" readonly>Presiona el botón superior para iniciar la consulta...</textarea>
     
-    <!-- Botón directo interactivo adicional para comodidad de tus amigos -->
-    <a id="btn-netflix" class="btn-abrir" href="#" target="_blank">🔓 IR DIRECTO A NETFLIX</a>
+    <a id="btn-netflix" class="btn-abrir" href="#" target="_blank">🔓 Ir directo a Netflix</a>
   </div>
 
   <script>
-    // URL real provista por tu implementación en Google Apps Script
-    const API_URL = "https://script.google.com/macros/s/AKfycbz29nygI8cziscwvb_q0S0a_A9QFMIlmfRa07CFzvfDGXX-OKf_FvOhtoqfPpgqXRwuBg/exec";
+    const API_URL = "https://google.com";
 
-    async function buscarUltimoCorreo() {
+    // Hacemos que la función de respuesta sea GLOBAL y visible para Google de forma explícita
+    window.procesarRespuestaServidor = function(data) {
       const boton = document.getElementById("btn");
       const cuadroTexto = document.getElementById("box");
       const botonNetflix = document.getElementById("btn-netflix");
 
-      // Cambiar estado visual mientras busca
-      boton.disabled = true;
-      boton.innerText = "🔄 CONSULTANDO A GMAIL...";
-      cuadroTexto.value = "Conectando con la bandeja de entrada de teamflix2026+2@gmail.com...";
-      botonNetflix.style.display = "none";
-
       try {
-        const respuesta = await fetch(API_URL);
-        const data = await respuesta.json();
-
         if (data.error) {
-          cuadroTexto.value = `AVISO DEL SERVIDOR:\n${data.error}`;
+          cuadroTexto.value = `Aviso del sistema:\n${data.error}`;
         } else {
-          // Limpieza técnica: Netflix codifica los enlaces HTML usando "&amp;" 
-          // Reemplazamos por "&" para que el navegador de tus amigos lo lea sin corromperse
+          // Reemplazo de las entidades HTML que Netflix inyecta en los botones
           let enlaceLimpio = data.enlace.replace(/&amp;/g, '&');
 
-          // Estructurar el texto dentro del cuadro como querías
-          cuadroTexto.value = `[CORREO DETECTADO]\n` +
-                              `Fecha: ${data.fecha}\n` +
-                              `Asunto: ${data.asunto}\n` +
-                              `----------------------------------------\n` +
-                              `ENLACE DIRECTO DE ACCESO:\n${enlaceLimpio}`;
+          cuadroTexto.value = `📌 REGISTRO DE ACCESO COMPARTIDO\n` +
+                              `• Recibido: ${data.fecha}\n` +
+                              `• Tipo: ${data.asunto}\n` +
+                              `──────────────────────────────\n` +
+                              `• Enlace directo:\n${enlaceLimpio}`;
           
-          // Habilitar el botón verde interactivo abajo para que no tengan que copiar y pegar
           botonNetflix.href = enlaceLimpio;
           botonNetflix.style.display = "block";
         }
-      } catch (error) {
-        cuadroTexto.value = "ERROR DE CONEXIÓN:\nNo se pudo consultar el servidor de Google. Asegúrate de que el despliegue de tu Web App mantenga el acceso configurado en 'Cualquiera'.";
-        console.error(error);
+      } catch (err) {
+        cuadroTexto.value = "Error al procesar la estructura de datos recibida.";
+        console.error(err);
       } finally {
-        // Restaurar el botón de búsqueda
         boton.disabled = false;
-        boton.innerText = "🔍 BUSCAR ÚLTIMO CORREO";
+        boton.innerText = "🔍 Buscar último acceso";
       }
+    };
+
+    function buscarUltimoCorreo() {
+      const boton = document.getElementById("btn");
+      const cuadroTexto = document.getElementById("box");
+      const botonNetflix = document.getElementById("btn-netflix");
+
+      boton.disabled = true;
+      boton.innerText = "🔄 Consultando a Gmail...";
+      cuadroTexto.value = "Abriendo canal seguro con teamflix2026+2@gmail.com...";
+      botonNetflix.style.display = "none";
+
+      // Eliminar scripts JSONP anteriores para limpiar el DOM
+      const scriptViejo = document.getElementById("jsonp-script");
+      if (scriptViejo) scriptViejo.remove();
+
+      // INYECCIÓN DINÁMICA DE SCRIPT GLOBAL (JSONP INMUNE A CORS)
+      const script = document.createElement("script");
+      script.id = "jsonp-script";
+      
+      // Enviamos el timestamp (?nocache=) para destruir la caché del navegador en cada clic
+      script.src = `${API_URL}?callback=procesarRespuestaServidor&nocache=${new Date().getTime()}`;
+      
+      script.onerror = function() {
+        cuadroTexto.value = "Error de conexión crítica.\nNo se pudo saltar la seguridad de Google. Verifica que la última versión del script esté desplegada como 'Cualquiera'.";
+        boton.disabled = false;
+        boton.innerText = "🔍 Buscar último acceso";
+      };
+
+      document.body.appendChild(script);
     }
   </script>
 
